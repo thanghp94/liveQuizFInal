@@ -51,3 +51,4 @@ If you need to change these settings, edit the database connection in `server.js
 4. Students are ranked by their total score
 
 This dashboard is best used during live quiz sessions to monitor student progress in real-time.# liveclass-Fina
+# liveclass-Fina
