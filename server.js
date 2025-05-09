@@ -47,7 +47,7 @@ app.get('/api/assignment/:id/progress', async (req, res) => {
   try {
     const assignmentId = req.params.id;
     const result = await pool.query(`
-      SELECT 
+      SELECT
         a.id as assignment_id,
         a.description as assignment_name,
         ast.id as student_try_id,
@@ -58,9 +58,9 @@ app.get('/api/assignment/:id/progress', async (req, res) => {
         SUM(st.score) as total_score,
         MAX(st.currentindex) as current_question_index
       FROM assignment a
-      JOIN assignment_student_try ast ON a.id = ast."assignmentID"
-      JOIN "Student_try" st ON ast."ID" = st.assignment_student_try_id
-      JOIN "Users" u ON ast.hocsinh_id = u."ID"
+      LEFT JOIN assignment_student_try ast ON a.id = ast."assignmentID"
+      LEFT JOIN "Student_try" st ON ast."ID" = st.assignment_student_try_id
+      LEFT JOIN "Users" u ON ast.hocsinh_id = u."ID"
       WHERE a.id = $1
       GROUP BY a.id, a.description, ast.id, u."Full_Name", a.noofquestion
       ORDER BY SUM(st.score) DESC
@@ -97,7 +97,7 @@ async function pollActiveAssignments() {
       const mostRecentAssignmentId = assignments.rows[0].id;
       
       const progress = await pool.query(`
-        SELECT 
+        SELECT
           a.id as assignment_id,
           a.description as assignment_name,
           ast.id as student_try_id,
@@ -108,9 +108,9 @@ async function pollActiveAssignments() {
           SUM(st.score) as total_score,
           MAX(st.currentindex) as current_question_index
         FROM assignment a
-        JOIN assignment_student_try ast ON a.id = ast."assignmentID"
-        JOIN "Student_try" st ON ast."ID" = st.assignment_student_try_id
-        JOIN "Users" u ON ast.hocsinh_id = u."ID"
+        LEFT JOIN assignment_student_try ast ON a.id = ast."assignmentID"
+        LEFT JOIN "Student_try" st ON ast."ID" = st.assignment_student_try_id
+        LEFT JOIN "Users" u ON ast.hocsinh_id = u."ID"
         WHERE a.id = $1
         GROUP BY a.id, a.description, ast.id, u."Full_Name", a.noofquestion
         ORDER BY SUM(st.score) DESC
